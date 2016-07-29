@@ -25,8 +25,6 @@
     $hash = new Hash;
     $auth = new Authorize($db, $hash);
 
-
-
     if($auth->check())
     {
         if(!isset($_SESSION['USER_AUTH']))
@@ -52,8 +50,6 @@
         }
 
         $_SESSION = array();
-        // If it's desired to kill the session, also delete the session cookie.
-        // Note: This will destroy the session, and not just the session data!
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
@@ -62,19 +58,9 @@
             );
         }
 
-        // Finally, destroy the session.
         session_destroy();
-
         header('Location: 0; url=./');
     }
-
-
-
-
-// either new or old, it should live at most for x seconds
     $_SESSION['discard_after'] = $now + 1000;
 
-
     define('COMP', '../components/');
-
-
