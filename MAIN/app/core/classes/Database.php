@@ -1,11 +1,5 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: ericl_000
-     * Date: 2/22/2016
-     * Time: 8:32 PM
-     */
     require_once('DataConfiguration.php');
 
     class Database
@@ -94,23 +88,6 @@
 
         public function runQuery($bind_params = null)
         {
-            /**
-             *  Check If runWatchTower private field is true ->
-             *  If it is, run watchTowerUpdate(), which will set runWatchTower
-             *  to false because it is an update AND contains 'watchtower'
-             */
-            try
-            {
-                if($this->runWatchTower===true)
-                {
-                    $this->watchTowerUpdate();
-                }
-            }
-            catch (Exception $error)
-            {
-                var_dump($error->getMessage() . '<br><br>  watchTowerUpdate() failed');
-            }
-
             try
             {
                 if (!is_null($bind_params))
@@ -181,18 +158,5 @@
         private function hasDataChange($sql)
         {
             return ((strpos($sql,"INSERT") || strpos($sql,"UPDATE") || strpos($sql,"DELETE")));
-        }
-
-        private function hasWatchTower($sql)
-        {
-            return (strpos($sql, "watchtower")===1);
-        }
-
-        private function watchTowerUpdate()
-        {
-            $this->prep("UPDATE `watchtower` SET `ModifiedDateTime` = :value WHERE `CouncilID` = :value1");
-            $this->bind(':value',date("Y-m-d H:i:s"));
-            $this->bind(':value1', $_SESSION['user']['CouncilID']);
-            $this->runQuery();
         }
     }
