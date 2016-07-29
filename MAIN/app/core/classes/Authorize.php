@@ -134,19 +134,6 @@
             return $info;
         }
 
-
-//        public function getCouncilInfo($access = null)
-//        {
-//            $info = 'default';
-//            if($this->check())
-//            {
-//                $info = (is_null($access)) ? $_SESSION[$this->session]['CouncilData'] : $_SESSION[$this->session]['CouncilData'][$access];
-//
-//            }
-//            return $info;
-//        }
-
-
         public function getUserRole($id)
         {
             try
@@ -245,35 +232,6 @@
         /****************************************************************************************************************************
          *
          ****************************************************************************************************************************/
-
-        // Format array to be stored in $_SESSION['user'].  Really just want to avoid storing the password hash -> advise please
-        protected function initCouncilData()
-        {
-            $this->database->prep("SELECT * FROM `citycouncil` WHERE `CouncilID` = :value");
-            $this->database->bind(":value", $_SESSION[$this->session]['CouncilID']);
-            $temp = $this->database->runQuery()->getFirst();
-
-            $_SESSION[$this->session]['CouncilData'] = $temp;
-        }
-
-        public function initCouncilUsers()
-        {
-            $this->database->prep("SELECT `ua`.`AcctID`,`ua`.`UserName`,`ua`.`FName`,`ua`.`LName`,`ua`.`EMail`,`ua`.`RoleID`
-                                   FROM `useracct` AS `ua`
-                                   WHERE `CouncilID` = :value1
-                                   AND `UserName` <> :value2
-                                   AND (`RoleID` = 3 OR `RoleID` = 4 )");
-            $this->database->bind(':value1', $_SESSION[$this->session]['CouncilID']);
-            $this->database->bind(':value2', $_SESSION[$this->session]['UserName']);
-            $temp = $this->database->runQuery()->getAll();
-
-            $_SESSION[$this->session]['CouncilUsers'] = array();
-
-            foreach($temp as $n)
-            {
-                $_SESSION[$this->session]['CouncilUsers'][] = $n;
-            }
-        }
 
 
         private function formatUser($user)
